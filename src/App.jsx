@@ -1,11 +1,12 @@
+import Sidebar from "./components/Sidebar"
 
 
 function App() {
 
   return (
-    <>
-      <h1>React App</h1>
-    </>
+    <div class="min-h-screen flex flex-col lg:flex-row">
+      <Sidebar />
+    </div>
   )
 }
 
