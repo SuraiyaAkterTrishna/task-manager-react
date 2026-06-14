@@ -1,13 +1,12 @@
-import Sidebar from "./components/Sidebar"
+import Sidebar from "./components/Sidebar";
 
-
-function App() {
-
-  return (
-    <div class="min-h-screen flex flex-col lg:flex-row">
-      <Sidebar />
-    </div>
-  )
+export default function App(){
+    return (
+        <div className="min-h-screen flex flex-col lg:flex-row">
+          <Sidebar />
+          <main class="flex-1 flex flex-col min-h-0">
+            
+          </main>
+        </div>
+    );
 }
-
-export default App
