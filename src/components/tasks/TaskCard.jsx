@@ -1,16 +1,15 @@
-import { useTasks } from "../../context/TaskContext";
 
-export default function TaskCard() {
-  const {
-    state: { tasks },
-  } = useTasks();
-  console.log(tasks);
+
+export default function TaskCard({task}) {
+  
   return (
-    <div
-      className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow relative"
-      data-card="wireframes"
-      data-column="todo"
-    >
+    <>
+        <div
+          key={task.id}
+          className="bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow relative"
+          data-card={task.id}
+          data-column={task.column}
+        >
       <div
         className="absolute top-4 right-4 text-gray-500"
         data-card-menu-container
@@ -62,14 +61,14 @@ export default function TaskCard() {
         </div>
       </div>
       <div className="mb-3">
-        <h3 className="font-semibold text-gray-900 text-sm">Wireframes</h3>
+        <h3 className="font-semibold text-gray-900 text-sm">{task.title}</h3>
       </div>
       <p className="text-xs text-gray-600 mb-4">
-        Set up high-fidelity prototypes with conditional logic
+        {task.description}
       </p>
       <div className="flex items-center gap-2 mb-3">
         <span className="inline-block px-2.5 py-1 bg-blue-50 text-blue-700 text-xs font-medium rounded">
-          Design
+          {task.tags[0]}
         </span>
       </div>
       <div className="flex items-center gap-1 text-xs text-gray-500">
@@ -86,8 +85,9 @@ export default function TaskCard() {
             d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
           ></path>
         </svg>
-        Aug 26
+       {task.dueDate}
       </div>
     </div>
+  </>
   );
 }

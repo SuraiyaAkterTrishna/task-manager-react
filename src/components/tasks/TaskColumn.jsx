@@ -1,14 +1,14 @@
 import TaskCard from "./TaskCard";
 
-export default function TaskColumn({ column }) {
-  const { title } = column;
+export default function TaskColumn({ title, tasks }) {
+  console.log(tasks)
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full">
       <div className="flex items-center gap-3 mb-6">
         <div className="flex items-center gap-3">
           <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
           <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-            3
+            {tasks.length}
           </span>
         </div>
 
@@ -110,7 +110,19 @@ export default function TaskColumn({ column }) {
       </div>
 
       <div className="space-y-4 flex-1 overflow-visible lg:overflow-y-auto">
-        <TaskCard />
+       {tasks.length > 0 ? (
+                    tasks.map((task) => (
+                        <TaskCard 
+                            key={task.id} 
+                            task={task} 
+                        />
+                    ))
+                ) : (
+                    <div className="text-center text-slate-400 py-8 text-sm">
+                        Not Found
+                    </div>
+                )}
+        
       </div>
     </div>
   );
