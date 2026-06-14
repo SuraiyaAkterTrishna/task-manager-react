@@ -8,7 +8,7 @@ export default function App() {
     <TaskProvider>
       <div className="min-h-screen flex flex-col lg:flex-row">
         <Sidebar />
-        <main class="flex-1 flex flex-col min-h-0">
+        <main className="flex-1 flex flex-col min-h-0">
           <Header />
           <TaskBoard />
         </main>
