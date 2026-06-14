@@ -1,11 +1,12 @@
 import TaskCard from "./TaskCard";
 
-export default function TaskColumn() {
+export default function TaskColumn({column}) {
+    const { title } = column;
   return (
     <div className="flex-1 flex flex-col min-w-0 w-full">
       <div className="flex items-center gap-3 mb-6">
         <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold text-gray-900">To-do</h2>
+          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
           <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
             3
           </span>
