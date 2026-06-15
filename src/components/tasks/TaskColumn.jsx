@@ -1,128 +1,148 @@
+import { useState } from "react";
+import { useTasks } from "../../context/TaskContext";
 import TaskCard from "./TaskCard";
 
-export default function TaskColumn({ title, tasks }) {
-  console.log(tasks)
+
+export default function TaskColumn({ column, tasks, onEditTask, onDeleteTask, onMoveTask, uniqueTags }) {
+  const { state, dispatch } = useTasks();
+  const [showFilterMenu, setShowFilterMenu] = useState(false);
+  
+  // Get current filter and sort for this column
+  const currentFilter = state.filters[column.id] || '';
+  const currentSort = state.sortOrder[column.id] || 'asc';
+
+  // Apply filter
+  let filteredTasks = tasks;
+  if (currentFilter) {
+    filteredTasks = tasks.filter(task => task.tags.includes(currentFilter));
+  }
+
+  // Apply sort
+  const sortedTasks = [...filteredTasks].sort((a, b) => {
+    const dateA = new Date(a.dueDate);
+    const dateB = new Date(b.dueDate);
+    return currentSort === 'asc' ? dateA - dateB : dateB - dateA;
+  });
+
+  const handleFilter = (tag) => {
+    console.log('Filter clicked:', tag, 'for column:', column.id); // Debug log
+    dispatch({ 
+      type: 'SET_FILTER', 
+      payload: { 
+        columnId: column.id, 
+        tag: tag === currentFilter ? '' : tag 
+      } 
+    });
+    setShowFilterMenu(false);
+  };
+
+  const toggleSort = () => {
+    const newOrder = currentSort === 'asc' ? 'desc' : 'asc';
+    dispatch({ 
+      type: 'SET_SORT', 
+      payload: { 
+        columnId: column.id, 
+        order: newOrder 
+      } 
+    });
+  };
+
   return (
-    <div className="flex-1 flex flex-col min-w-0 w-full">
-      <div className="flex items-center gap-3 mb-6">
-        <div className="flex items-center gap-3">
-          <h2 className="text-lg font-semibold text-gray-900">{title}</h2>
-          <span className="text-sm font-medium text-gray-500 bg-gray-100 px-2.5 py-1 rounded-full">
-            {tasks.length}
-          </span>
+    <div className="bg-gray-50 rounded-2xl p-4 flex flex-col h-full">
+      {/* Column Header */}
+      <div className="flex justify-between items-center mb-4 px-2">
+        <div>
+          <h2 className="text-lg font-bold text-gray-900">
+            {column.title}
+            <span className="ml-2 text-sm text-gray-500 font-normal">
+              ({sortedTasks.length})
+            </span>
+          </h2>
+          {currentFilter && (
+            <span className="inline-flex items-center gap-1 mt-1 px-2 py-0.5 bg-blue-100 text-blue-800 text-xs rounded-full">
+              Filter: {currentFilter}
+              <button 
+                onClick={() => handleFilter(currentFilter)}
+                className="hover:text-blue-600"
+              >
+                ×
+              </button>
+            </span>
+          )}
         </div>
-
-        <div className="ml-auto flex items-center gap-2">
+        
+        <div className="flex gap-2">
+          {/* Filter Button */}
           <div className="relative">
             <button
-              type="button"
-              className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none"
-              data-menu-toggle="todo-filter-menu"
+              onClick={() => setShowFilterMenu(!showFilterMenu)}
+              className={`p-2 rounded-lg transition-colors ${currentFilter ? 'bg-blue-100 text-blue-600' : 'text-gray-600 hover:bg-gray-200'}`}
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414V19a1 1 0 01-.553.894l-2 1A1 1 0 0110 20v-6.293L3.293 7.293A1 1 0 013 6.586V4z"
-                ></path>
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
               </svg>
-              Filter
             </button>
-            <div
-              className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg text-sm text-gray-700 py-2 hidden z-40"
-              id="todo-filter-menu"
-              data-menu
-            >
-              <p className="px-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Filter by tag
-              </p>
-              <button
-                type="button"
-                className="w-full text-left px-4 py-2 hover:bg-gray-50"
-              >
-                Design
-              </button>
-              <button
-                type="button"
-                className="w-full text-left px-4 py-2 hover:bg-gray-50"
-              >
-                Operations
-              </button>
-              <button
-                type="button"
-                className="w-full text-left px-4 py-2 hover:bg-gray-50"
-              >
-                Marketing
-              </button>
-            </div>
+            
+            {showFilterMenu && (
+              <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-50">
+                <div className="p-2">
+                  <div className="text-xs font-medium text-gray-500 px-2 py-1 mb-1">Filter by Tag</div>
+                  <button
+                    onClick={() => handleFilter('')}
+                    className="w-full text-left px-3 py-1.5 text-sm rounded-md hover:bg-gray-100"
+                  >
+                    All Tags
+                  </button>
+                  {uniqueTags.map(tag => (
+                    <button
+                      key={tag}
+                      onClick={() => handleFilter(tag)}
+                      className={`w-full text-left px-3 py-1.5 text-sm rounded-md ${
+                        currentFilter === tag ? 'bg-gray-900 text-white' : 'hover:bg-gray-100'
+                      }`}
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
-
-          <div className="relative">
-            <button
-              type="button"
-              className="flex items-center gap-2 px-3 py-1.5 text-sm text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 focus:outline-none"
-              data-menu-toggle="todo-sort-menu"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                strokeWidth="1.5"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M4 6h16M8 12h12M12 18h8"
-                ></path>
-              </svg>
-              Sort
-            </button>
-            <div
-              className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-xl shadow-lg text-sm text-gray-700 py-2 hidden z-40"
-              id="todo-sort-menu"
-              data-menu
-            >
-              <p className="px-4 pb-2 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Sort by date
-              </p>
-              <button
-                type="button"
-                className="w-full text-left px-4 py-2 hover:bg-gray-50"
-              >
-                Newest first
-              </button>
-              <button
-                type="button"
-                className="w-full text-left px-4 py-2 hover:bg-gray-50"
-              >
-                Oldest first
-              </button>
-            </div>
-          </div>
+          
+          {/* Sort Button */}
+          <button
+            onClick={toggleSort}
+            className="p-2 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors"
+            title={`Sort by date (${currentSort === 'asc' ? 'Oldest first' : 'Newest first'})`}
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+            </svg>
+          </button>
         </div>
       </div>
-
-      <div className="space-y-4 flex-1 overflow-visible lg:overflow-y-auto">
-       {tasks.length > 0 ? (
-                    tasks.map((task) => (
-                        <TaskCard 
-                            key={task.id} 
-                            task={task} 
-                        />
-                    ))
-                ) : (
-                    <div className="text-center text-slate-400 py-8 text-sm">
-                        Not Found
-                    </div>
-                )}
-        
+      
+      {/* Tasks Container */}
+      <div className="flex-1 overflow-y-auto space-y-3 min-h-[200px]">
+        {sortedTasks.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-sm">No tasks found</p>
+            {currentFilter && (
+              <p className="text-xs text-gray-400 mt-1">Clear filter to see all tasks</p>
+            )}
+          </div>
+        ) : (
+          sortedTasks.map(task => (
+            <TaskCard
+              key={task.id}
+              task={task}
+              columnId={column.id}
+              onEdit={onEditTask}
+              onDelete={onDeleteTask}
+              onMove={onMoveTask}
+            />
+          ))
+        )}
       </div>
     </div>
   );

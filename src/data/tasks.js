@@ -10,7 +10,7 @@ export const taskData = {
       "title": "Wireframes",
       "description": "Set up high-fidelity prototypes with conditional logic",
       "tags": ["Design"],
-      "dueDate": "Aug 26",
+      "dueDate": "2024-08-26",
       "columnId": 1
     },
     {
@@ -18,7 +18,7 @@ export const taskData = {
       "title": "Data Entry",
       "description": "Data Entry Cleanup and validation",
       "tags": ["Operations"],
-      "dueDate": "Aug 27",
+      "dueDate": "2024-08-27",
       "columnId": 1
     },
     {
@@ -26,7 +26,7 @@ export const taskData = {
       "title": "Social Media",
       "description": "Social Media Scheduling and posting",
       "tags": ["Marketing"],
-      "dueDate": "Aug 28",
+      "dueDate": "2024-08-28",
       "columnId": 1
     },
     {
@@ -34,7 +34,7 @@ export const taskData = {
       "title": "Graphic Design",
       "description": "Graphic Design Edits and refinements",
       "tags": ["Creative"],
-      "dueDate": "Aug 27",
+      "dueDate": "2024-08-27",
       "columnId": 2
     },
     {
@@ -42,7 +42,7 @@ export const taskData = {
       "title": "Presentation",
       "description": "Presentation Slide Design",
       "tags": ["Development"],
-      "dueDate": "Aug 30",
+      "dueDate": "2024-08-30",
       "columnId": 2
     },
     {
@@ -50,7 +50,7 @@ export const taskData = {
       "title": "API Integration",
       "description": "Integrate payment gateway APIs",
       "tags": ["Backend"],
-      "dueDate": "Aug 29",
+      "dueDate": "2024-08-29",
       "columnId": 2
     },
     {
@@ -58,7 +58,7 @@ export const taskData = {
       "title": "Software Installation",
       "description": "Install and configure development tools",
       "tags": ["Setup"],
-      "dueDate": "Aug 23",
+      "dueDate": "2024-08-23",
       "columnId": 3
     },
     {
@@ -66,7 +66,7 @@ export const taskData = {
       "title": "Database Design",
       "description": "Database schema and optimization",
       "tags": ["Infrastructure"],
-      "dueDate": "Aug 24",
+      "dueDate": "2024-08-24",
       "columnId": 3
     },
     {
@@ -74,8 +74,8 @@ export const taskData = {
       "title": "Documentation",
       "description": "Complete API documentation",
       "tags": ["Documentation"],
-      "dueDate": "Aug 25",
+      "dueDate": "2024-08-25",
       "columnId": 3
     }
   ]
-}
+};

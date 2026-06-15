@@ -1,5 +1,16 @@
+import { useState } from "react";
+import { useTasks } from "../context/TaskContext";
 
-export default function Header({ onAddTaskClick }) { 
+export default function Header({ onAddTaskClick }) {
+  const { state, dispatch } = useTasks();
+  const [searchInput, setSearchInput] = useState(state.searchKeyword);
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchInput(value);
+    dispatch({ type: "SET_SEARCH", payload: value });
+  };
+
   return (
     <>
       <div className="bg-white border-b border-gray-200 px-4 py-4 sm:px-6 sm:py-6 lg:px-8">
@@ -28,12 +39,14 @@ export default function Header({ onAddTaskClick }) {
               <input
                 type="search"
                 id="card-search"
+                value={searchInput}
+                onChange={handleSearch}
                 placeholder="Search tasks"
                 className="w-full rounded-xl border border-gray-200 bg-white pl-11 pr-4 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-gray-900 focus:outline-none"
               />
             </div>
             <button
-              onClick={onAddTaskClick} 
+              onClick={onAddTaskClick}
               className="px-4 py-2 bg-gray-900 text-white rounded-lg font-medium hover:bg-gray-800 transition-colors"
             >
               + Add Task
